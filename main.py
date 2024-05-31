@@ -16,7 +16,7 @@ VALID_CHANNEL = TextChannel|VoiceChannel|Thread
 
 class Client(DiscordClient):
 	def __init__(self) -> None:
-		super().__init__(Intents.all()) #? doesn't need all, just messages and guild members, but i'm lazy
+		super().__init__(intents=Intents.all()) #? doesn't need all, just messages and guild members, but i'm lazy
 		self.cache = Cache()
 		self.currently_exporting = False
 		with open('save.json','r') as f:
