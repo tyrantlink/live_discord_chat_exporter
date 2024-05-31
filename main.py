@@ -46,6 +46,8 @@ class Client(DiscordClient):
 	async def export_channel(self,channel:VALID_CHANNEL) -> None:
 		exporter = Exporter(self.cache,channel,True)
 		export = await exporter.export()
+		if export.messageCount == 0:
+			return
 		self.export_save[channel.id] = export
 		async with aopen(f'{EXPORT_DIRECTORY}/{channel.id}.json','w') as f:
 			await f.write(dumps(export.model_dump_json_filter_missing(),indent=2,ensure_ascii=False))
