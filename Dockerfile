@@ -5,7 +5,7 @@ WORKDIR /app
 # install .net and nodejs
 RUN curl -sL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
 RUN apt-get update -qq && apt-get -y install \
-	aspnetcore-runtime-8.0
+	aspnetcore-runtime-8.0 \
 	nodejs
 
 # install discord chat exporter
