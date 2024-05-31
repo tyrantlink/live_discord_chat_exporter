@@ -31,6 +31,10 @@ class Client(DiscordClient):
 		if not self.export_guild:
 			await self.close()
 			exit('could not find export guild')
+		if not self.full_export_loop.is_running():
+			self.full_export_loop.start()
+		if not self.live_export_loop.is_running():
+			self.live_export_loop.start()
 
 	async def on_message(self,message:Message) -> None:
 		await self._ready.wait()
@@ -67,6 +71,10 @@ class Client(DiscordClient):
 		semaphore = Semaphore(EXPORT_THREAD_COUNT)
 		tasks = [self.export_thread_handler(semaphore,channel) for channel in channels]
 		await gather(*tasks)
+		self.save.last_full_archive = int(time())
+		async with aopen('save.json','w') as f:
+			f.write(self.save.model_dump_json(indent=2))
+		self.currently_exporting = False
 
 	@loop(minutes=5)
 	async def live_export_loop(self) -> None:
