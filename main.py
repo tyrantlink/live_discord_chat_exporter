@@ -1,4 +1,4 @@
-from config import BOT_TOKEN,EXPORT_GUILD,EXPORT_DIRECTORY,CHATANALYTICS_DIRECTORY,EXPORT_THREAD_COUNT
+from config import BOT_TOKEN,EXPORT_GUILD,EXPORT_DIRECTORY,CHATANALYTICS_DIRECTORY,EXPORT_THREAD_COUNT,EXCLUDED_CHANNELS
 from discord import Client as DiscordClient,TextChannel,VoiceChannel,Thread,Message,Intents
 from asyncio import gather,Semaphore,create_subprocess_exec
 from models import Save,Export,Message as ExportMessage
@@ -69,11 +69,15 @@ class Client(DiscordClient):
 			return
 		print('7 days have passed since last full export, starting full export')
 		self.currently_exporting = True
+
 		channels = [
 			c for c in self.export_guild.channels
 			if isinstance(c,VALID_CHANNEL) and
+			c.id not in EXCLUDED_CHANNELS and
 			c.permissions_for(self.export_guild.me).read_message_history and
-			c.permissions_for(self.export_guild.me).read_messages]
+			c.permissions_for(self.export_guild.me).read_messages and
+			not (isinstance(c,VoiceChannel) and not c.permissions_for(self.export_guild.me).connect)]
+
 		self.channels_export_progress = [0,len(channels)]
 		semaphore = Semaphore(EXPORT_THREAD_COUNT)
 		tasks = [self.export_thread_handler(semaphore,channel) for channel in channels]
