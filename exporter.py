@@ -255,7 +255,7 @@ class Exporter:
 
 		parsed_message = Message(
 			id = str(message.id),
-			type = MESSAGE_TYPES.get(message.type.value),
+			type = MESSAGE_TYPES.get(message.type.value,'Default'),
 			timestamp = self._get_time(message.created_at),
 			timestampEdited = self._get_time(message.edited_at) if message.edited_at else None,
 			callEndedTimestamp = None,

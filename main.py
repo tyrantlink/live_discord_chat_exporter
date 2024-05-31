@@ -49,6 +49,8 @@ class Client(DiscordClient):
 		self.export_save[channel.id] = export
 		async with aopen(f'{EXPORT_DIRECTORY}/{channel.id}.json','w') as f:
 			await f.write(dumps(export.model_dump_json_filter_missing(),indent=2,ensure_ascii=False))
+		self.channels_export_progress[0] += 1
+		print(f'({self.channels_export_progress[0]}/{self.channels_export_progress[1]}) exported {channel.name} ({channel.id})')
 
 	async def export_thread_handler(self,semaphore:Semaphore,channel:VALID_CHANNEL) -> None:
 		async with semaphore:
@@ -63,15 +65,20 @@ class Client(DiscordClient):
 		await self._ready.wait()
 		if self.currently_exporting:
 			return
-		if time() - self.save.last_full_archive < 60*60*24*7:
+		if time() - self.save.last_full_export < 60*60*24*7:
 			return
 		print('7 days have passed since last full export, starting full export')
 		self.currently_exporting = True
-		channels = [c for c in self.export_guild.channels if isinstance(c,VALID_CHANNEL)]
+		channels = [
+			c for c in self.export_guild.channels
+			if isinstance(c,VALID_CHANNEL) and
+			c.permissions_for(self.export_guild.me).read_message_history and
+			c.permissions_for(self.export_guild.me).read_messages]
+		self.channels_export_progress = [0,len(channels)]
 		semaphore = Semaphore(EXPORT_THREAD_COUNT)
 		tasks = [self.export_thread_handler(semaphore,channel) for channel in channels]
 		await gather(*tasks)
-		self.save.last_full_archive = int(time())
+		self.save.last_full_export = int(time())
 		async with aopen('save.json','w') as f:
 			f.write(self.save.model_dump_json(indent=2))
 		self.currently_exporting = False
@@ -108,4 +115,4 @@ if __name__ == '__main__':
 		with open('save.json','w') as f:
 			f.write(dumps({'last_full_export':0},indent=2))
 
-	Client().run(BOT_TOKEN)
+	Client().run(BOT_TOKEN,log_handler=None)

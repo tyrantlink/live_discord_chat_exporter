@@ -1,3 +1,6 @@
 venv
 config.py
 save.json
+__pycache__
+chatanalytics
+export
