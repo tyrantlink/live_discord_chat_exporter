@@ -38,6 +38,8 @@ class Client(DiscordClient):
 
 	async def on_message(self,message:Message) -> None:
 		await self._ready.wait()
+		if message.channel.id in EXCLUDED_CHANNELS:
+			return
 		exported_message = await self.base_exporter.get_message(message)
 		if message.channel.id not in self.pending_exports:
 			self.pending_exports[message.channel.id] = []
