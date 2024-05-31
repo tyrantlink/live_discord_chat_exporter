@@ -61,7 +61,7 @@ def a_timer(func:Callable[P,T]) -> Callable[P,T]:
 	return wrapper_function if DEBUG else func
 
 class Exporter:
-	def __init__(self,cache:Cache,channel:GuildChannel|None,always_use_username:bool=False,guild:DiscordGuild|None=None):
+	def __init__(self,cache:Cache,channel:GuildChannel|None=None,always_use_username:bool=False,guild:DiscordGuild|None=None):
 		if not channel and not guild:
 			raise ValueError('either channel or guild must be provided')
 		self.cache = cache
