@@ -98,6 +98,6 @@ if __name__ == '__main__':
 
 	if not exists('save.json'):
 		with open('save.json','w') as f:
-			f.write(dumps({'last_full_archive':0},indent=2))
+			f.write(dumps({'last_full_export':0},indent=2))
 
 	Client().run(BOT_TOKEN)
