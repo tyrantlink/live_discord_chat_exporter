@@ -94,6 +94,8 @@ class Client(DiscordClient):
 		await self._ready.wait()
 		if self.currently_exporting:
 			return
+		if not self.pending_exports:
+			return
 		for channel_id,messages in self.pending_exports.items():
 			existing_export = self.export_save.get(channel_id,None)
 			if existing_export is None:
