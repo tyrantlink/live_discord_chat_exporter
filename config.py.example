@@ -1,0 +1,6 @@
+DEBUG = False
+EXPORT_DIRECTORY = '/app/export'
+CHATANALYTICS_DIRECTORY = '/app/chatanalytics'
+EXPORT_THREAD_COUNT = 10
+BOT_TOKEN = 'token'
+EXPORT_GUILD = 0
