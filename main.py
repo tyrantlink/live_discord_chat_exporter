@@ -1,5 +1,5 @@
 from config import BOT_TOKEN,EXPORT_GUILD,EXPORT_DIRECTORY,CHATANALYTICS_DIRECTORY,EXPORT_THREAD_COUNT
-from discord import Client as DiscordClient,TextChannel,VoiceChannel,Thread,Message
+from discord import Client as DiscordClient,TextChannel,VoiceChannel,Thread,Message,Intents
 from asyncio import gather,Semaphore,create_subprocess_exec
 from models import Save,Export,Message as ExportMessage
 from discord.ext.tasks import loop
@@ -16,7 +16,7 @@ VALID_CHANNEL = TextChannel|VoiceChannel|Thread
 
 class Client(DiscordClient):
 	def __init__(self) -> None:
-		super().__init__()
+		super().__init__(Intents.all()) #? doesn't need all, just messages and guild members, but i'm lazy
 		self.cache = Cache()
 		self.currently_exporting = False
 		with open('save.json','r') as f:
