@@ -1,0 +1,1 @@
+this is pretty bad i made it in like, an afternoon because i'm stubborn. will monitor discord chat create a build of [chat-analytics](https://github.com/mlomb/chat-analytics) every five minutes, and then do a full export every seven days for accuracy
