@@ -27,7 +27,7 @@ class Client(DiscordClient):
 	async def on_ready(self) -> None:
 		print('connected to discord!')
 		self.export_guild = self.get_guild(EXPORT_GUILD)
-		self.base_exporter = Exporter(self.cache)
+		self.base_exporter = Exporter(self.cache,guild=self.export_guild)
 		if not self.export_guild:
 			await self.close()
 			exit('could not find export guild')
