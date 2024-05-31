@@ -93,7 +93,7 @@ class Exporter:
 	def _get_time(self,time:datetime) -> str: #? stupid dumb bullshit to match dce exactly
 		time = time.astimezone(self.tz)
 		out_string = time.strftime('%Y-%m-%dT%H:%M:%S.')
-		out_string += time.strftime('%f').rstrip('0')[:4]
+		out_string += time.strftime('%f').rstrip('0')[:4] or '0'
 		tz = time.strftime('%z')
 		out_string += f'{tz[:-2]}:{tz[-2:]}'
 		return out_string
