@@ -68,7 +68,7 @@ class Exporter:
 		self.channel = channel
 		self.guild = guild or channel.guild
 		self.always_use_username = always_use_username
-		self.tz = timezone(timedelta(hours=-7))
+		self.tz = timezone(timedelta(hours=0))
 
 	@a_timer
 	async def export(self) -> Export:
