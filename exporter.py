@@ -270,7 +270,7 @@ class Exporter:
 			timestampEdited = self._get_time(message.edited_at) if message.edited_at else None,
 			callEndedTimestamp = None,
 			isPinned = message.pinned,
-			content = message.content,
+			content = content,
 			author = author,
 			attachments = [Attachment(
 				id = str(attachment.id),
