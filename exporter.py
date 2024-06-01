@@ -8,6 +8,7 @@ from functools import wraps
 from inspect import stack
 from config import DEBUG
 from cache import Cache
+from re import finditer
 
 P = ParamSpec("P")
 T = TypeVar("T")
@@ -18,7 +19,7 @@ timed_functions = set()
 printed_logs = []
 time_taken = {}
 
-def _get_real_parent(func:str) -> str|None:
+def _get_real_parent() -> str|None:
 	for frame in stack():
 		if frame.function in timed_functions:
 			return frame.function
@@ -252,6 +253,15 @@ class Exporter:
 	@a_timer
 	async def get_message(self,message:DiscordMessage) -> Message:
 		author = await self._get_author(message.author)
+
+		#? there's probably a way to do this with just re.sub but that would be a very big one-liner and i don't want to do that
+		content = message.content
+		for match in finditer(r'(<@!?(\d+)>)',content):
+			mention_user = await self._safe_fetch_member(int(match.group(2)))
+			if mention_user is None:
+				continue
+			mention_data = await self._get_author(mention_user)
+			content = content.replace(match.group(1),f'@{mention_data.nickname}')
 
 		parsed_message = Message(
 			id = str(message.id),
