@@ -261,7 +261,7 @@ class Exporter:
 			if mention_user is None:
 				continue
 			mention_data = await self._get_author(mention_user)
-			content = content.replace(match.group(1),f'@{mention_data.nickname}')
+			content = content.replace(match.group(1),f'@{mention_data.name}')
 
 		parsed_message = Message(
 			id = str(message.id),
